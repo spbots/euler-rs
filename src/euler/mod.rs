@@ -19,6 +19,7 @@ mod e014;
 mod e015;
 mod e017;
 mod e019;
+mod e024;
 mod e031;
 
 pub fn run() {
@@ -49,6 +50,7 @@ fn solution(n: u64) -> Option<String> {
         15 => Some(e015::result()),
         17 => Some(e017::result()),
         19 => Some(e019::result()),
+        24 => Some(e024::result()),
         31 => Some(e031::result()),
         _ => None,
     }
