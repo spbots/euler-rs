@@ -1,13 +1,7 @@
 use super::prime_utils;
 
 pub fn result() -> String {
-    /* calculated in the test in release.
-    algo is slow... possible optimizations:
-        - make rotations return empty for numbers we don't care about
-        - insert sorted?
-        - check for duplicates earlier?
-    */
-    format!("{}", 55)
+    format!("{}", circular_primes_below(1000000).len())
 }
 
 /*
@@ -31,12 +25,14 @@ fn all_rotations(mut n: u64) -> Vec<u64> {
     for _i in 0..n_digits {
         n *= 10;
         let r = n / divisor;
+        if n_digits > 1 && (r % 2 == 0 || r % 5 == 0) {
+            // short circuit if something is guaranteed to have a
+            // non-prime rotation.
+            return Vec::new();
+        }
         n -= r * divisor;
         n += r;
-        let rotation_exists = result.iter().find(|&&x| x == n) != None;
-        if !rotation_exists {
-            result.push(n);
-        }
+        result.push(n);
     }
     result
 }
@@ -46,9 +42,10 @@ fn circular_primes_below(n: u64) -> Vec<u64> {
 
     for i in 0..p.len() {
         let mut rotations = all_rotations(p[i]);
-        let is_circular = rotations
-            .iter()
-            .fold(true, |acc, x| acc && p.iter().find(|&y| y == x) != None);
+        let is_circular = rotations.iter().all(|x| match p.binary_search(x) {
+            Ok(_) => true,
+            Err(_) => false,
+        });
         if is_circular {
             circular.append(&mut rotations);
         }
@@ -59,11 +56,9 @@ fn circular_primes_below(n: u64) -> Vec<u64> {
 }
 #[test]
 fn euler_035() {
-    assert_eq!(all_rotations(231), [312, 123, 231]);
     assert_eq!(
         circular_primes_below(100),
         [2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, 97]
     );
-
-    // assert_eq!(circular_primes_below(1000000).len(), 55);
+    assert_eq!(circular_primes_below(1000000).len(), 55);
 }
