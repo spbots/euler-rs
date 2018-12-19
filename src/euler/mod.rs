@@ -22,6 +22,7 @@ mod e019;
 mod e024;
 mod e031;
 mod e035;
+mod e036;
 
 pub fn run() {
     for i in 1..100 {
@@ -54,6 +55,7 @@ fn solution(n: u64) -> Option<String> {
         24 => Some(e024::result()),
         31 => Some(e031::result()),
         35 => Some(e035::result()),
+        36 => Some(e036::result()),
         _ => None,
     }
 }
